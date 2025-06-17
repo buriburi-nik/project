@@ -773,7 +773,7 @@ export const ChatInterface = ({ user, onLogout }) => {
                   className={cn(
                     "max-w-[70%]",
                     message.sender === "user"
-                      ? "bg-gradient-to-r from-indigo-500 to-purple-500 text-white border-0"
+                      ? "bg-gradient-to-r from-red-500 to-orange-500 text-white border-0"
                       : "bg-white dark:bg-gray-800",
                   )}
                 >
