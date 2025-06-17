@@ -557,16 +557,30 @@ export const ChatInterface = ({ user, onLogout }) => {
                 >
                   <CardContent className="p-3">
                     <p className="text-sm leading-relaxed">{message.text}</p>
-                    <p
-                      className={cn(
-                        "text-xs mt-2",
-                        message.sender === "user"
-                          ? "text-indigo-100"
-                          : "text-gray-500 dark:text-gray-400",
+                    <div className="flex items-center justify-between mt-2">
+                      <p
+                        className={cn(
+                          "text-xs",
+                          message.sender === "user"
+                            ? "text-indigo-100"
+                            : "text-gray-500 dark:text-gray-400",
+                        )}
+                      >
+                        {new Date(message.timestamp).toLocaleTimeString()}
+                      </p>
+                      {/* Click-to-speak button for bot messages */}
+                      {message.sender === "bot" && isSpeechSupported && (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => speak(message.text)}
+                          className="h-6 w-6 p-0 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                          title="Click to speak this message"
+                        >
+                          <Volume2 className="w-3 h-3" />
+                        </Button>
                       )}
-                    >
-                      {new Date(message.timestamp).toLocaleTimeString()}
-                    </p>
+                    </div>
                   </CardContent>
                 </Card>
               </div>
