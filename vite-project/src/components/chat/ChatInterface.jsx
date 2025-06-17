@@ -634,6 +634,7 @@ export const ChatInterface = ({ user, onLogout }) => {
                 error={voiceError}
                 isVoiceSupported={isVoiceSupported}
                 isSpeechSupported={isSpeechSupported}
+                isOnline={isOnline}
                 onStartListening={startListening}
                 onStopListening={stopListening}
                 onPauseSpeaking={pauseSpeaking}
