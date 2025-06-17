@@ -63,16 +63,16 @@ export const SignUp = ({ onNavigateToSignIn }) => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 via-white to-cyan-50 dark:from-gray-900 dark:via-gray-800 dark:to-indigo-900 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-red-50 via-white to-orange-50 dark:from-gray-900 dark:via-gray-800 dark:to-red-900 p-4">
       <Card className="w-full max-w-md shadow-2xl border-0 bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl">
         <CardHeader className="space-y-4 text-center pb-8">
-          <div className="mx-auto w-16 h-16 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-2xl flex items-center justify-center">
+          <div className="mx-auto w-16 h-16 bg-gradient-to-br from-red-500 to-orange-500 rounded-2xl flex items-center justify-center">
             <div className="w-8 h-8 bg-white dark:bg-gray-900 rounded-lg flex items-center justify-center">
-              <div className="w-4 h-4 bg-gradient-to-br from-indigo-600 to-purple-600 rounded"></div>
+              <div className="w-4 h-4 bg-gradient-to-br from-red-500 to-orange-500 rounded"></div>
             </div>
           </div>
           <div>
-            <CardTitle className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+            <CardTitle className="text-2xl font-bold bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text text-transparent">
               Join ZeroCode Chat
             </CardTitle>
             <CardDescription className="text-gray-600 dark:text-gray-300 mt-2">
@@ -112,7 +112,7 @@ export const SignUp = ({ onNavigateToSignIn }) => {
                 placeholder="Enter your full name"
                 value={formData.name}
                 onChange={(e) => handleInputChange("name", e.target.value)}
-                className="border-gray-200 dark:border-gray-700 focus:border-indigo-500 dark:focus:border-indigo-400"
+                className="border-gray-200 dark:border-gray-700 focus:border-red-500 dark:focus:border-red-400"
                 required
               />
             </div>
@@ -130,7 +130,7 @@ export const SignUp = ({ onNavigateToSignIn }) => {
                 placeholder="Enter your email"
                 value={formData.email}
                 onChange={(e) => handleInputChange("email", e.target.value)}
-                className="border-gray-200 dark:border-gray-700 focus:border-indigo-500 dark:focus:border-indigo-400"
+                className="border-gray-200 dark:border-gray-700 focus:border-red-500 dark:focus:border-red-400"
                 required
               />
             </div>
@@ -148,7 +148,7 @@ export const SignUp = ({ onNavigateToSignIn }) => {
                 placeholder="Enter your password"
                 value={formData.password}
                 onChange={(e) => handleInputChange("password", e.target.value)}
-                className="border-gray-200 dark:border-gray-700 focus:border-indigo-500 dark:focus:border-indigo-400"
+                className="border-gray-200 dark:border-gray-700 focus:border-red-500 dark:focus:border-red-400"
                 required
                 minLength={6}
               />
@@ -172,7 +172,7 @@ export const SignUp = ({ onNavigateToSignIn }) => {
                 onChange={(e) =>
                   handleInputChange("confirmPassword", e.target.value)
                 }
-                className="border-gray-200 dark:border-gray-700 focus:border-indigo-500 dark:focus:border-indigo-400"
+                className="border-gray-200 dark:border-gray-700 focus:border-red-500 dark:focus:border-red-400"
                 required
               />
             </div>
@@ -187,7 +187,7 @@ export const SignUp = ({ onNavigateToSignIn }) => {
 
             <Button
               type="submit"
-              className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-lg transition-all duration-200 transform hover:scale-[1.02]"
+              className="w-full bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 text-white shadow-lg transition-all duration-200 transform hover:scale-[1.02]"
               disabled={isLoading}
             >
               {isLoading ? (
@@ -206,7 +206,7 @@ export const SignUp = ({ onNavigateToSignIn }) => {
               Already have an account?{" "}
               <button
                 onClick={onNavigateToSignIn}
-                className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 transition-colors font-medium"
+                className="text-red-600 dark:text-red-400 hover:text-red-500 transition-colors font-medium"
               >
                 Sign in here
               </button>
