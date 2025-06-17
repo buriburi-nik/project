@@ -18,6 +18,7 @@ import {
   Sun,
   Moon,
   Download,
+  FileText,
   Mic,
   MicOff,
   Volume2,
