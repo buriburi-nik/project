@@ -57,6 +57,8 @@ export const ChatInterface = ({ user, onLogout }) => {
     interimTranscript,
     isSupported: isVoiceSupported,
     error: voiceError,
+    retryCount,
+    isOnline,
     startListening,
     stopListening,
     resetTranscript,
