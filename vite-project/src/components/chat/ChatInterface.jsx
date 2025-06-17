@@ -593,18 +593,22 @@ export const ChatInterface = ({ user, onLogout }) => {
                 />
               </div>
 
-              <Button
-                onClick={isListening ? stopListening : startListening}
-                variant={isListening ? "destructive" : "outline"}
+              <VoiceControls
+                isListening={isListening}
+                isSpeaking={isSpeaking}
+                isPaused={isPaused}
+                interimTranscript={interimTranscript}
+                error={voiceError}
+                isVoiceSupported={isVoiceSupported}
+                isSpeechSupported={isSpeechSupported}
+                onStartListening={startListening}
+                onStopListening={stopListening}
+                onPauseSpeaking={pauseSpeaking}
+                onResumeSpeaking={resumeSpeaking}
+                onStopSpeaking={stopSpeaking}
                 size="sm"
                 className="h-11"
-              >
-                {isListening ? (
-                  <MicOff className="w-4 h-4" />
-                ) : (
-                  <Mic className="w-4 h-4" />
-                )}
-              </Button>
+              />
 
               <Button
                 onClick={sendMessage}
