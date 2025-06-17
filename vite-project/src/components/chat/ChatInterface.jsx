@@ -667,6 +667,10 @@ export const ChatInterface = ({ user, onLogout }) => {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
+                <DropdownMenuItem onClick={() => exportChat("pdf")}>
+                  <FileText className="w-4 h-4 mr-2" />
+                  Export as PDF
+                </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => exportChat("markdown")}>
                   Export as Markdown
                 </DropdownMenuItem>
