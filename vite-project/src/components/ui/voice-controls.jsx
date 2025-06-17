@@ -20,6 +20,7 @@ export const VoiceControls = ({
   error,
   isVoiceSupported,
   isSpeechSupported,
+  isOnline = true,
   onStartListening,
   onStopListening,
   onPauseSpeaking,
