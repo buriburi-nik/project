@@ -219,6 +219,9 @@ export const useVoiceRecognition = () => {
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
       }
+      if (retryTimeoutRef.current) {
+        clearTimeout(retryTimeoutRef.current);
+      }
     };
   }, [language, isListening]);
 
