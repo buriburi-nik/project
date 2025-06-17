@@ -658,6 +658,8 @@ export const ChatInterface = ({ user, onLogout }) => {
               isPaused={isPaused}
               interimTranscript={interimTranscript}
               error={voiceError}
+              retryCount={retryCount}
+              isOnline={isOnline}
               className="mt-2"
             />
           </div>
