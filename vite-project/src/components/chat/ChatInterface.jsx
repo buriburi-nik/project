@@ -560,7 +560,7 @@ export const ChatInterface = ({ user, onLogout }) => {
           <div className="flex-1 p-4 space-y-3">
             <Button
               onClick={startNewChat}
-              className="w-full justify-start bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white"
+              className="w-full justify-start bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 text-white"
             >
               <Plus className="w-4 h-4 mr-2" />
               New Chat
