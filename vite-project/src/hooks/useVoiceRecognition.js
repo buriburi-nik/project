@@ -15,6 +15,32 @@ export const useVoiceRecognition = () => {
   const retryTimeoutRef = useRef(null);
   const maxRetries = 3;
 
+  // Monitor network connectivity
+  useEffect(() => {
+    const handleOnline = () => {
+      setIsOnline(true);
+      setError(null);
+    };
+
+    const handleOffline = () => {
+      setIsOnline(false);
+      setError(
+        "No internet connection. Speech recognition requires an internet connection.",
+      );
+      if (isListening) {
+        stopListening();
+      }
+    };
+
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
+
+    return () => {
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
+    };
+  }, [isListening]);
+
   // Check browser support
   useEffect(() => {
     const speechRecognitionSupported =
