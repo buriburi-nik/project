@@ -1,105 +1,148 @@
-import { useState, useEffect } from "react";
-import { AuthService } from "@/services/authService.js";
+import { useState, useEffect, createContext, useContext } from "react";
+
+// Mock user database (in real app, this would be an API)
+const MOCK_USERS = [
+  {
+    id: "1",
+    name: "Demo User",
+    email: "demo@zerocode.com",
+    password: "demo123",
+  },
+];
+
+// In-memory storage for registered users (in real app, this would be a database)
+let registeredUsers = [...MOCK_USERS];
 
 export const useAuth = () => {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  // Check for saved user session on component mount
   useEffect(() => {
-    const initializeAuth = async () => {
-      // Ensure demo user is set up
-      AuthService.setupDemoUser();
-
-      // Use the correct localStorage key that AuthService uses
-      const token = localStorage.getItem("zerocode_session");
-
-      if (token) {
-        try {
-          // Verify token
-          const userData = await AuthService.verifyToken(token);
-          setUser({ ...userData, token });
-        } catch (error) {
-          console.error("Token verification failed:", error);
-          // Clear invalid session data using correct keys
-          localStorage.removeItem("zerocode_session");
-          localStorage.removeItem("zerocode_current_user");
-        }
+    const savedUser = localStorage.getItem("zerocode_user");
+    if (savedUser) {
+      try {
+        const userData = JSON.parse(savedUser);
+        setUser(userData);
+      } catch (error) {
+        console.error("Error parsing saved user data:", error);
+        localStorage.removeItem("zerocode_user");
       }
-
-      setIsLoading(false);
-    };
-
-    initializeAuth();
+    }
+    setIsLoading(false);
   }, []);
 
   const login = async (email, password) => {
     try {
-      const response = await AuthService.login({ email, password });
+      // Simulate API delay
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      // The AuthService already stores the token with correct keys
-      // Just update our local state
-      const userWithToken = { ...response.user, token: response.token };
+      // Find user in registered users
+      const foundUser = registeredUsers.find(
+        (u) =>
+          u.email.toLowerCase() === email.toLowerCase() &&
+          u.password === password,
+      );
 
-      // Force state update
-      setUser(userWithToken);
+      if (!foundUser) {
+        throw new Error(
+          "Invalid email or password. Please check your credentials and try again.",
+        );
+      }
 
-      console.log("Login successful, user state updated:", userWithToken);
+      // Create user session (exclude password)
+      const userSession = {
+        id: foundUser.id,
+        name: foundUser.name,
+        email: foundUser.email,
+        loginTime: new Date().toISOString(),
+      };
 
-      return { success: true, user: userWithToken };
+      // Save to localStorage and state
+      localStorage.setItem("zerocode_user", JSON.stringify(userSession));
+      setUser(userSession);
+
+      return { success: true, user: userSession };
     } catch (error) {
-      console.error("Login failed:", error);
+      console.error("Login error:", error);
       throw error;
     }
   };
 
   const register = async (name, email, password) => {
-    // Basic validation
-    if (!name.trim() || !email.trim() || !password.trim()) {
-      throw new Error("All fields are required");
-    }
-
-    if (password.length < 6) {
-      throw new Error("Password must be at least 6 characters");
-    }
-
-    // Email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      throw new Error("Please enter a valid email address");
-    }
-
     try {
-      const response = await AuthService.register({ name, email, password });
+      // Simulate API delay
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      // The AuthService already stores the token with correct keys
-      // Just update our local state
-      const userWithToken = { ...response.user, token: response.token };
-
-      // Force state update
-      setUser(userWithToken);
-
-      console.log(
-        "Registration successful, user state updated:",
-        userWithToken,
+      // Check if user already exists
+      const existingUser = registeredUsers.find(
+        (u) => u.email.toLowerCase() === email.toLowerCase(),
       );
 
-      return { success: true, user: userWithToken };
+      if (existingUser) {
+        throw new Error(
+          "An account with this email already exists. Please sign in instead.",
+        );
+      }
+
+      // Validate input
+      if (!name.trim()) {
+        throw new Error("Please enter your full name.");
+      }
+      if (!email.trim()) {
+        throw new Error("Please enter a valid email address.");
+      }
+      if (password.length < 6) {
+        throw new Error("Password must be at least 6 characters long.");
+      }
+
+      // Create new user
+      const newUser = {
+        id: Date.now().toString(),
+        name: name.trim(),
+        email: email.toLowerCase().trim(),
+        password: password,
+        registeredAt: new Date().toISOString(),
+      };
+
+      // Add to registered users
+      registeredUsers.push(newUser);
+
+      // Create user session (exclude password)
+      const userSession = {
+        id: newUser.id,
+        name: newUser.name,
+        email: newUser.email,
+        registeredAt: newUser.registeredAt,
+      };
+
+      // Save to localStorage and state
+      localStorage.setItem("zerocode_user", JSON.stringify(userSession));
+      setUser(userSession);
+
+      return { success: true, user: userSession };
     } catch (error) {
-      console.error("Registration failed:", error);
+      console.error("Registration error:", error);
       throw error;
     }
   };
 
-  const logout = async () => {
-    try {
-      await AuthService.logout();
-    } catch (error) {
-      console.error("Logout API call failed:", error);
-    } finally {
-      // AuthService.logout() already clears the correct localStorage keys
-      setUser(null);
-    }
+  const logout = () => {
+    localStorage.removeItem("zerocode_user");
+    setUser(null);
   };
 
-  return { user, isLoading, login, register, logout };
+  const clearError = () => {
+    // This can be used to clear any auth-related errors
+  };
+
+  return {
+    user,
+    isLoading,
+    login,
+    register,
+    logout,
+    clearError,
+    isAuthenticated: !!user,
+  };
 };
