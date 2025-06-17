@@ -179,6 +179,15 @@ export const ChatInterface = ({ user, onLogout }) => {
   };
 
   const exportChat = (format) => {
+    if (messages.length === 0) {
+      toast({
+        title: "No messages to export",
+        description: "Start a conversation first to export the chat.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     const timestamp = new Date().toISOString().split("T")[0];
     let content;
     let filename;
