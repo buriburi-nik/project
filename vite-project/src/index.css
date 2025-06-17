@@ -82,7 +82,9 @@
   }
 
   body {
-    @apply bg-background text-foreground font-sans;
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+    font-family: Inter, sans-serif;
     font-feature-settings:
       "rlig" 1,
       "calt" 1;
