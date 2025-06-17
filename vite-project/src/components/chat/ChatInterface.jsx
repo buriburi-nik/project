@@ -19,6 +19,8 @@ import {
   Download,
   Mic,
   MicOff,
+  Volume2,
+  VolumeX,
   BarChart3,
   History,
   User,
