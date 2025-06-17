@@ -224,7 +224,16 @@ export const useVoiceRecognition = () => {
 
   const startListening = useCallback(() => {
     if (!isSupported) {
-      setError("Speech recognition is not supported in this browser.");
+      setError(
+        "Speech recognition is not supported in this browser. Please use Chrome, Edge, or Safari.",
+      );
+      return;
+    }
+
+    if (!navigator.onLine) {
+      setError(
+        "No internet connection. Speech recognition requires an internet connection.",
+      );
       return;
     }
 
@@ -233,10 +242,26 @@ export const useVoiceRecognition = () => {
         setError(null);
         setTranscript("");
         setInterimTranscript("");
+        setRetryCount(0); // Reset retry count on manual start
+
+        // Clear any pending retry attempts
+        if (retryTimeoutRef.current) {
+          clearTimeout(retryTimeoutRef.current);
+          retryTimeoutRef.current = null;
+        }
+
         recognitionRef.current.start();
       } catch (error) {
         console.error("Failed to start speech recognition:", error);
-        setError("Failed to start speech recognition. Please try again.");
+        if (error.name === "InvalidStateError") {
+          setError(
+            "Speech recognition is already active. Please wait a moment and try again.",
+          );
+        } else {
+          setError(
+            "Failed to start speech recognition. Please check your microphone permissions and try again.",
+          );
+        }
       }
     }
   }, [isSupported, isListening]);
