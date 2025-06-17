@@ -240,6 +240,12 @@ export const ChatInterface = ({ user, onLogout }) => {
     a.download = filename;
     a.click();
     URL.revokeObjectURL(url);
+
+    // Show success notification
+    toast({
+      title: `Chat exported successfully!`,
+      description: `Downloaded as ${filename}`,
+    });
   };
 
   const exportChatAsPDF = () => {
