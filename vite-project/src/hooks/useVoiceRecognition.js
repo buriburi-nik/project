@@ -106,28 +106,110 @@ export const useVoiceRecognition = () => {
 
       recognitionRef.current.onerror = (event) => {
         console.error("Speech recognition error:", event.error);
-        setError(event.error);
         setIsListening(false);
         setInterimTranscript("");
 
-        // Handle specific errors
+        // Handle specific errors with retry logic
         switch (event.error) {
           case "no-speech":
-            setError("No speech detected. Please try again.");
+            setError("No speech detected. Please try speaking more clearly.");
+            setRetryCount(0); // Reset retry count for user errors
             break;
           case "audio-capture":
-            setError("Microphone not accessible. Please check permissions.");
+            setError(
+              "Microphone not accessible. Please check permissions and ensure no other app is using the microphone.",
+            );
+            setRetryCount(0);
             break;
           case "not-allowed":
             setError(
-              "Microphone access denied. Please allow microphone access.",
+              "Microphone access denied. Please click the microphone icon in your browser and allow access.",
             );
+            setRetryCount(0);
             break;
           case "network":
-            setError("Network error. Please check your internet connection.");
+            handleNetworkError();
+            break;
+          case "service-not-allowed":
+            setError(
+              "Speech recognition service not allowed. Please check your browser settings.",
+            );
+            setRetryCount(0);
+            break;
+          case "bad-grammar":
+            setError(
+              "Speech recognition failed. Please try again with clearer speech.",
+            );
+            setRetryCount(0);
             break;
           default:
-            setError(`Speech recognition error: ${event.error}`);
+            setError(
+              `Speech recognition error: ${event.error}. Please try again.`,
+            );
+            if (retryCount < maxRetries) {
+              scheduleRetry();
+            }
+        }
+      };
+
+      // Handle network-specific errors with retry logic
+      const handleNetworkError = () => {
+        if (!navigator.onLine) {
+          setError(
+            "No internet connection. Speech recognition requires an internet connection.",
+          );
+          setRetryCount(0);
+          return;
+        }
+
+        if (retryCount < maxRetries) {
+          const retryDelay = Math.pow(2, retryCount) * 1000; // Exponential backoff
+          setError(
+            `Network error. Retrying in ${retryDelay / 1000} seconds... (${retryCount + 1}/${maxRetries})`,
+          );
+
+          retryTimeoutRef.current = setTimeout(() => {
+            setRetryCount((prev) => prev + 1);
+            attemptRestart();
+          }, retryDelay);
+        } else {
+          setError(
+            "Network error: Unable to connect to speech recognition service. Please check your internet connection and try again later.",
+          );
+          setRetryCount(0);
+        }
+      };
+
+      // Schedule a retry attempt
+      const scheduleRetry = () => {
+        const retryDelay = Math.pow(2, retryCount) * 1000; // Exponential backoff
+        setError(
+          `Connection failed. Retrying in ${retryDelay / 1000} seconds... (${retryCount + 1}/${maxRetries})`,
+        );
+
+        retryTimeoutRef.current = setTimeout(() => {
+          setRetryCount((prev) => prev + 1);
+          attemptRestart();
+        }, retryDelay);
+      };
+
+      // Attempt to restart recognition
+      const attemptRestart = () => {
+        if (navigator.onLine && recognitionRef.current) {
+          try {
+            setError("Reconnecting...");
+            recognitionRef.current.start();
+          } catch (error) {
+            console.error("Failed to restart speech recognition:", error);
+            if (retryCount < maxRetries) {
+              scheduleRetry();
+            } else {
+              setError(
+                "Failed to restart speech recognition. Please try manually.",
+              );
+              setRetryCount(0);
+            }
+          }
         }
       };
     }
