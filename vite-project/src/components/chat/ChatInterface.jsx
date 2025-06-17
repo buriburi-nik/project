@@ -126,7 +126,7 @@ export const ChatInterface = ({ user, onLogout }) => {
         // Small delay to ensure message is rendered
         setTimeout(() => {
           speak(lastMessage.text, {
-            onEnd: () => console.log("Finished speaking bot response")
+            onEnd: () => console.log("Finished speaking bot response"),
           });
         }, 500);
       }
@@ -259,140 +259,185 @@ export const ChatInterface = ({ user, onLogout }) => {
       const doc = new jsPDF();
       const timestamp = new Date().toISOString().split("T")[0];
 
-    // PDF Configuration
-    const pageWidth = doc.internal.pageSize.getWidth();
-    const pageHeight = doc.internal.pageSize.getHeight();
-    const margin = 20;
-    const maxWidth = pageWidth - margin * 2;
-    let currentY = margin;
+      // PDF Configuration
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const pageHeight = doc.internal.pageSize.getHeight();
+      const margin = 20;
+      const maxWidth = pageWidth - margin * 2;
+      let currentY = margin;
 
-    // Helper function to add text with word wrapping
-    const addWrappedText = (text, x, y, maxWidth, fontSize = 10, fontStyle = 'normal') => {
-      doc.setFontSize(fontSize);
-      doc.setFont('helvetica', fontStyle);
+      // Helper function to add text with word wrapping
+      const addWrappedText = (
+        text,
+        x,
+        y,
+        maxWidth,
+        fontSize = 10,
+        fontStyle = "normal",
+      ) => {
+        doc.setFontSize(fontSize);
+        doc.setFont("helvetica", fontStyle);
 
-      const lines = doc.splitTextToSize(text, maxWidth);
-      for (let i = 0; i < lines.length; i++) {
-        if (y + (fontSize * 0.35) > pageHeight - margin) {
-          doc.addPage();
-          y = margin;
+        const lines = doc.splitTextToSize(text, maxWidth);
+        for (let i = 0; i < lines.length; i++) {
+          if (y + fontSize * 0.35 > pageHeight - margin) {
+            doc.addPage();
+            y = margin;
+          }
+          doc.text(lines[i], x, y);
+          y += fontSize * 0.35; // Line height
         }
-        doc.text(lines[i], x, y);
-        y += fontSize * 0.35; // Line height
-      }
-      return y;
-    };
+        return y;
+      };
 
-    // Add header
-    doc.setFillColor(79, 70, 229); // Indigo color
-    doc.rect(0, 0, pageWidth, 40, 'F');
-
-    doc.setTextColor(255, 255, 255);
-    doc.setFontSize(20);
-    doc.setFont('helvetica', 'bold');
-    doc.text('ZeroCode Chat Export', margin, 25);
-
-    doc.setFontSize(12);
-    doc.setFont('helvetica', 'normal');
-    doc.text(`Generated on ${new Date().toLocaleDateString()}`, margin, 35);
-
-    currentY = 55;
-
-    // Add user info
-    doc.setTextColor(0, 0, 0);
-    doc.setFontSize(14);
-    doc.setFont('helvetica', 'bold');
-    doc.text('Chat Information', margin, currentY);
-    currentY += 15;
-
-    doc.setFontSize(10);
-    doc.setFont('helvetica', 'normal');
-    currentY = addWrappedText(`User: ${user.name} (${user.email})`, margin, currentY, maxWidth);
-    currentY = addWrappedText(`Total Messages: ${messages.length}`, margin, currentY, maxWidth);
-
-    if (messages.length > 0) {
-      const startTime = new Date(messages[0].timestamp).toLocaleString();
-      const endTime = new Date(messages[messages.length - 1].timestamp).toLocaleString();
-      currentY = addWrappedText(`Chat Duration: ${startTime} - ${endTime}`, margin, currentY, maxWidth);
-    }
-
-    currentY += 15;
-
-    // Add separator line
-    doc.setDrawColor(200, 200, 200);
-    doc.line(margin, currentY, pageWidth - margin, currentY);
-    currentY += 15;
-
-    // Add conversation title
-    doc.setFontSize(14);
-    doc.setFont('helvetica', 'bold');
-    doc.text('Conversation', margin, currentY);
-    currentY += 20;
-
-    // Add messages
-    messages.forEach((message, index) => {
-      // Check if we need a new page
-      if (currentY > pageHeight - 60) {
-        doc.addPage();
-        currentY = margin;
-      }
-
-      // Message header
-      const sender = message.sender === 'user' ? 'You' : 'AI Assistant';
-      const timeString = new Date(message.timestamp).toLocaleString();
-
-      // Add sender badge
-      if (message.sender === 'user') {
-        doc.setFillColor(79, 70, 229); // Indigo for user
-      } else {
-        doc.setFillColor(107, 114, 128); // Gray for AI
-      }
-
-      doc.roundedRect(margin, currentY - 8, 60, 12, 2, 2, 'F');
+      // Add header
+      doc.setFillColor(79, 70, 229); // Indigo color
+      doc.rect(0, 0, pageWidth, 40, "F");
 
       doc.setTextColor(255, 255, 255);
-      doc.setFontSize(9);
-      doc.setFont('helvetica', 'bold');
-      doc.text(sender, margin + 5, currentY - 2);
+      doc.setFontSize(20);
+      doc.setFont("helvetica", "bold");
+      doc.text("ZeroCode Chat Export", margin, 25);
 
-      // Add timestamp
-      doc.setTextColor(128, 128, 128);
-      doc.setFontSize(8);
-      doc.setFont('helvetica', 'normal');
-      doc.text(timeString, margin + 65, currentY - 2);
+      doc.setFontSize(12);
+      doc.setFont("helvetica", "normal");
+      doc.text(`Generated on ${new Date().toLocaleDateString()}`, margin, 35);
 
-      currentY += 10;
+      currentY = 55;
 
-      // Add message content
+      // Add user info
       doc.setTextColor(0, 0, 0);
-      currentY = addWrappedText(message.text, margin, currentY, maxWidth, 10, 'normal');
+      doc.setFontSize(14);
+      doc.setFont("helvetica", "bold");
+      doc.text("Chat Information", margin, currentY);
+      currentY += 15;
 
-      currentY += 15; // Space between messages
-
-      // Add light separator line between messages
-      if (index < messages.length - 1) {
-        doc.setDrawColor(240, 240, 240);
-        doc.line(margin, currentY - 5, pageWidth - margin, currentY - 5);
-      }
-    });
-
-    // Add footer to all pages
-    const totalPages = doc.internal.getNumberOfPages();
-    for (let i = 1; i <= totalPages; i++) {
-      doc.setPage(i);
-      doc.setFontSize(8);
-      doc.setTextColor(128, 128, 128);
-      doc.text(
-        `Page ${i} of ${totalPages} • ZeroCode Chat Export`,
-        pageWidth / 2,
-        pageHeight - 10,
-        { align: 'center' }
+      doc.setFontSize(10);
+      doc.setFont("helvetica", "normal");
+      currentY = addWrappedText(
+        `User: ${user.name} (${user.email})`,
+        margin,
+        currentY,
+        maxWidth,
       );
-    }
+      currentY = addWrappedText(
+        `Total Messages: ${messages.length}`,
+        margin,
+        currentY,
+        maxWidth,
+      );
 
-    // Save the PDF
-    const filename = `zerocode-chat-${timestamp}.pdf`;
-    doc.save(filename);
+      if (messages.length > 0) {
+        const startTime = new Date(messages[0].timestamp).toLocaleString();
+        const endTime = new Date(
+          messages[messages.length - 1].timestamp,
+        ).toLocaleString();
+        currentY = addWrappedText(
+          `Chat Duration: ${startTime} - ${endTime}`,
+          margin,
+          currentY,
+          maxWidth,
+        );
+      }
+
+      currentY += 15;
+
+      // Add separator line
+      doc.setDrawColor(200, 200, 200);
+      doc.line(margin, currentY, pageWidth - margin, currentY);
+      currentY += 15;
+
+      // Add conversation title
+      doc.setFontSize(14);
+      doc.setFont("helvetica", "bold");
+      doc.text("Conversation", margin, currentY);
+      currentY += 20;
+
+      // Add messages
+      messages.forEach((message, index) => {
+        // Check if we need a new page
+        if (currentY > pageHeight - 60) {
+          doc.addPage();
+          currentY = margin;
+        }
+
+        // Message header
+        const sender = message.sender === "user" ? "You" : "AI Assistant";
+        const timeString = new Date(message.timestamp).toLocaleString();
+
+        // Add sender badge
+        if (message.sender === "user") {
+          doc.setFillColor(79, 70, 229); // Indigo for user
+        } else {
+          doc.setFillColor(107, 114, 128); // Gray for AI
+        }
+
+        doc.roundedRect(margin, currentY - 8, 60, 12, 2, 2, "F");
+
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(9);
+        doc.setFont("helvetica", "bold");
+        doc.text(sender, margin + 5, currentY - 2);
+
+        // Add timestamp
+        doc.setTextColor(128, 128, 128);
+        doc.setFontSize(8);
+        doc.setFont("helvetica", "normal");
+        doc.text(timeString, margin + 65, currentY - 2);
+
+        currentY += 10;
+
+        // Add message content
+        doc.setTextColor(0, 0, 0);
+        currentY = addWrappedText(
+          message.text,
+          margin,
+          currentY,
+          maxWidth,
+          10,
+          "normal",
+        );
+
+        currentY += 15; // Space between messages
+
+        // Add light separator line between messages
+        if (index < messages.length - 1) {
+          doc.setDrawColor(240, 240, 240);
+          doc.line(margin, currentY - 5, pageWidth - margin, currentY - 5);
+        }
+      });
+
+      // Add footer to all pages
+      const totalPages = doc.internal.getNumberOfPages();
+      for (let i = 1; i <= totalPages; i++) {
+        doc.setPage(i);
+        doc.setFontSize(8);
+        doc.setTextColor(128, 128, 128);
+        doc.text(
+          `Page ${i} of ${totalPages} • ZeroCode Chat Export`,
+          pageWidth / 2,
+          pageHeight - 10,
+          { align: "center" },
+        );
+      }
+
+      // Save the PDF
+      const filename = `zerocode-chat-${timestamp}.pdf`;
+      doc.save(filename);
+
+      // Show success notification
+      toast({
+        title: "PDF exported successfully!",
+        description: `Downloaded as ${filename}`,
+      });
+    } catch (error) {
+      console.error("PDF export error:", error);
+      toast({
+        title: "Export failed",
+        description: "There was an error creating the PDF. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   const saveCurrentChat = () => {
