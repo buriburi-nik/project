@@ -33,6 +33,7 @@ import { useVoiceRecognition } from "@/hooks/useVoiceRecognition.js";
 import { useSpeechSynthesis } from "@/hooks/useSpeechSynthesis.js";
 import { AnalyticsDashboard } from "@/components/analytics/AnalyticsDashboard.jsx";
 import { ChatHistory } from "@/components/chat/ChatHistory.jsx";
+import { VoiceControls, VoiceStatus } from "@/components/ui/voice-controls.jsx";
 import { ChatService } from "@/services/chatService.js";
 import { cn } from "@/lib/utils.js";
 
