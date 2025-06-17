@@ -107,6 +107,24 @@ export const ChatInterface = ({ user, onLogout }) => {
     [messages, user.name],
   );
 
+  // Auto-speak bot responses (optional feature)
+  const [autoSpeak, setAutoSpeak] = useState(false);
+
+  // Handle auto-speaking of bot messages
+  useEffect(() => {
+    if (autoSpeak && messages.length > 0) {
+      const lastMessage = messages[messages.length - 1];
+      if (lastMessage.sender === "bot" && !isSpeaking) {
+        // Small delay to ensure message is rendered
+        setTimeout(() => {
+          speak(lastMessage.text, {
+            onEnd: () => console.log("Finished speaking bot response"),
+          });
+        }, 500);
+      }
+    }
+  }, [messages, autoSpeak, speak, isSpeaking]);
+
   const sendMessage = async () => {
     if (!inputValue.trim()) return;
 
