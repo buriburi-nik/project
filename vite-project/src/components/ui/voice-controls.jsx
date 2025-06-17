@@ -218,7 +218,7 @@ export const VoiceFloatingButton = ({
       onClick={isListening ? onStopListening : onStartListening}
       className={cn(
         "fixed bottom-20 right-6 w-14 h-14 rounded-full shadow-lg z-50",
-        "bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700",
+        "bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600",
         "text-white border-0 transition-all duration-300 hover:scale-110",
         isListening && "animate-pulse bg-red-500 hover:bg-red-600",
         className,
