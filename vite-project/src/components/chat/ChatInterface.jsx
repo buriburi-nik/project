@@ -53,6 +53,7 @@ export const ChatInterface = ({ user, onLogout }) => {
   const [chatHistory, setChatHistory] = useState({});
 
   const messagesEndRef = useRef(null);
+  const { toast } = useToast();
   const { isDark, toggleTheme } = useTheme();
   const {
     isListening,
