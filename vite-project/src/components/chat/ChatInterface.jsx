@@ -619,12 +619,14 @@ export const ChatInterface = ({ user, onLogout }) => {
               </Button>
             </div>
 
-            {isListening && (
-              <div className="mt-2 text-sm text-red-600 dark:text-red-400 flex items-center">
-                <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse mr-2"></div>
-                Listening... Speak now
-              </div>
-            )}
+            <VoiceStatus
+              isListening={isListening}
+              isSpeaking={isSpeaking}
+              isPaused={isPaused}
+              interimTranscript={interimTranscript}
+              error={voiceError}
+              className="mt-2"
+            />
           </div>
         </div>
       </div>
