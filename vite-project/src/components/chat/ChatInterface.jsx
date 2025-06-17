@@ -758,7 +758,7 @@ export const ChatInterface = ({ user, onLogout }) => {
                   <AvatarFallback
                     className={cn(
                       message.sender === "user"
-                        ? "bg-indigo-100 dark:bg-indigo-900 text-indigo-600 dark:text-indigo-400"
+                        ? "bg-red-100 dark:bg-red-900 text-red-600 dark:text-red-400"
                         : "bg-gradient-to-br from-indigo-500 to-purple-500 text-white",
                     )}
                   >
