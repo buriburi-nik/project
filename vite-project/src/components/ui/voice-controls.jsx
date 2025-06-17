@@ -115,18 +115,46 @@ export const VoiceStatus = ({
   isPaused,
   interimTranscript,
   error,
+  retryCount,
+  isOnline,
   className,
 }) => {
   if (error) {
+    const isRetrying =
+      error.includes("Retrying") || error.includes("Reconnecting");
+    const isNetworkError =
+      error.includes("Network") || error.includes("internet");
+
     return (
       <div
         className={cn(
-          "text-sm text-red-600 dark:text-red-400 flex items-center",
+          "text-sm flex items-start space-x-2",
+          isRetrying
+            ? "text-yellow-600 dark:text-yellow-400"
+            : "text-red-600 dark:text-red-400",
           className,
         )}
       >
-        <AlertCircle className="w-4 h-4 mr-2" />
-        {error}
+        <div className="flex-shrink-0 mt-0.5">
+          {isRetrying ? (
+            <div className="w-4 h-4 border-2 border-yellow-600 dark:border-yellow-400 border-t-transparent rounded-full animate-spin" />
+          ) : (
+            <AlertCircle className="w-4 h-4" />
+          )}
+        </div>
+        <div className="flex-1">
+          <p className="leading-tight">{error}</p>
+          {isNetworkError && !isOnline && (
+            <p className="text-xs mt-1 opacity-75">
+              Check your internet connection and try again.
+            </p>
+          )}
+          {isRetrying && (
+            <p className="text-xs mt-1 opacity-75">
+              Please wait while we reconnect...
+            </p>
+          )}
+        </div>
       </div>
     );
   }
