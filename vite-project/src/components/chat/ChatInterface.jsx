@@ -30,6 +30,7 @@ import {
 } from "lucide-react";
 import { useTheme } from "@/hooks/useTheme.js";
 import { useVoiceRecognition } from "@/hooks/useVoiceRecognition.js";
+import { useSpeechSynthesis } from "@/hooks/useSpeechSynthesis.js";
 import { AnalyticsDashboard } from "@/components/analytics/AnalyticsDashboard.jsx";
 import { ChatHistory } from "@/components/chat/ChatHistory.jsx";
 import { ChatService } from "@/services/chatService.js";
