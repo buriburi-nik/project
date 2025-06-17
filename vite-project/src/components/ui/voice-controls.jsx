@@ -52,16 +52,28 @@ export const VoiceControls = ({
           onClick={isListening ? onStopListening : onStartListening}
           variant={isListening ? "destructive" : "outline"}
           size={size}
+          disabled={!isOnline}
           className={cn(
-            "transition-all duration-200",
+            "transition-all duration-200 relative",
             isListening && "animate-pulse shadow-lg",
+            !isOnline && "opacity-50 cursor-not-allowed",
           )}
-          title={isListening ? "Stop listening" : "Start voice input"}
+          title={
+            !isOnline
+              ? "Voice recognition requires internet connection"
+              : isListening
+                ? "Stop listening"
+                : "Start voice input"
+          }
         >
           {isListening ? (
             <MicOff className="w-4 h-4" />
           ) : (
             <Mic className="w-4 h-4" />
+          )}
+          {/* Network status indicator */}
+          {!isOnline && (
+            <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border border-white dark:border-gray-800" />
           )}
         </Button>
       )}
