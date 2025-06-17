@@ -92,9 +92,9 @@ export const ChatInterface = ({ user, onLogout }) => {
   useEffect(() => {
     if (transcript) {
       setInputValue(transcript);
-      setTranscript("");
+      resetTranscript();
     }
-  }, [transcript, setTranscript]);
+  }, [transcript, resetTranscript]);
 
   const generateBotResponse = useCallback(
     async (userMessage) => {
