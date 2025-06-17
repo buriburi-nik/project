@@ -311,6 +311,8 @@ export const useVoiceRecognition = () => {
     isSupported,
     error,
     language,
+    retryCount,
+    isOnline,
     startListening,
     stopListening,
     resetTranscript,
