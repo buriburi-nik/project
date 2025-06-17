@@ -40,6 +40,7 @@ import { ChatHistory } from "@/components/chat/ChatHistory.jsx";
 import { VoiceControls, VoiceStatus } from "@/components/ui/voice-controls.jsx";
 import { ChatService } from "@/services/chatService.js";
 import { cn } from "@/lib/utils.js";
+import { useToast } from "@/hooks/use-toast";
 
 export const ChatInterface = ({ user, onLogout }) => {
   const [messages, setMessages] = useState([]);
