@@ -378,6 +378,21 @@ export const ChatInterface = ({ user, onLogout }) => {
               )}
               {isDark ? "Light Mode" : "Dark Mode"}
             </Button>
+
+            {isSpeechSupported && (
+              <Button
+                variant="ghost"
+                onClick={() => setAutoSpeak(!autoSpeak)}
+                className="w-full justify-start"
+              >
+                {autoSpeak ? (
+                  <Volume2 className="w-4 h-4 mr-2" />
+                ) : (
+                  <VolumeX className="w-4 h-4 mr-2" />
+                )}
+                {autoSpeak ? "Auto-speak On" : "Auto-speak Off"}
+              </Button>
+            )}
           </div>
 
           <div className="p-4 border-t border-gray-200 dark:border-gray-700">
