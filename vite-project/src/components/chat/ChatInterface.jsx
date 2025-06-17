@@ -867,7 +867,7 @@ export const ChatInterface = ({ user, onLogout }) => {
               <Button
                 onClick={sendMessage}
                 disabled={!inputValue.trim() || isTyping}
-                className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white h-11"
+                className="bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 text-white h-11"
               >
                 <Send className="w-4 h-4" />
               </Button>
