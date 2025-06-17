@@ -7,9 +7,13 @@ export const useVoiceRecognition = () => {
   const [isSupported, setIsSupported] = useState(false);
   const [error, setError] = useState(null);
   const [language, setLanguage] = useState("en-US");
+  const [retryCount, setRetryCount] = useState(0);
+  const [isOnline, setIsOnline] = useState(navigator.onLine);
 
   const recognitionRef = useRef(null);
   const timeoutRef = useRef(null);
+  const retryTimeoutRef = useRef(null);
+  const maxRetries = 3;
 
   // Check browser support
   useEffect(() => {
