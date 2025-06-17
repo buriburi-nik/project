@@ -274,9 +274,19 @@ export const useVoiceRecognition = () => {
         console.error("Failed to stop speech recognition:", error);
       }
     }
+
+    // Clear all timeouts
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
     }
+    if (retryTimeoutRef.current) {
+      clearTimeout(retryTimeoutRef.current);
+      retryTimeoutRef.current = null;
+    }
+
+    setRetryCount(0);
+    setError(null);
   }, [isListening]);
 
   const resetTranscript = useCallback(() => {
