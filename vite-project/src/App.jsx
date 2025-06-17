@@ -1,35 +1,63 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, { useState } from "react";
+import { Toaster } from "@/components/ui/toaster";
+import { Toaster as Sonner } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { useAuth } from "@/hooks/useAuth.js";
+import { SignIn } from "@/pages/SignIn.jsx";
+import { SignUp } from "@/pages/SignUp.jsx";
+import { Chat } from "@/pages/Chat.jsx";
 
-function App() {
-  const [count, setCount] = useState(0)
+const queryClient = new QueryClient();
 
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+const AppContent = () => {
+  const { user, isLoading, logout } = useAuth();
+  const [currentPage, setCurrentPage] = useState("signin"); // 'signin' | 'signup'
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 via-white to-cyan-50 dark:from-gray-900 dark:via-gray-800 dark:to-indigo-900">
+        <div className="text-center">
+          <div className="mx-auto w-16 h-16 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-2xl flex items-center justify-center mb-4">
+            <div className="w-8 h-8 bg-white dark:bg-gray-900 rounded-lg flex items-center justify-center">
+              <div className="w-4 h-4 bg-gradient-to-br from-indigo-600 to-purple-600 rounded animate-pulse"></div>
+            </div>
+          </div>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600 mx-auto mb-4"></div>
+          <p className="text-gray-600 dark:text-gray-400 font-medium">
+            Loading ZeroCode Chat...
+          </p>
+        </div>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    );
+  }
 
-export default App
+  // If user is authenticated, show the main chat page
+  if (user) {
+    return <Chat user={user} onLogout={logout} />;
+  }
+
+  // If not authenticated, show authentication pages
+  if (currentPage === "signin") {
+    return <SignIn onNavigateToSignUp={() => setCurrentPage("signup")} />;
+  }
+
+  if (currentPage === "signup") {
+    return <SignUp onNavigateToSignIn={() => setCurrentPage("signin")} />;
+  }
+
+  // Default fallback to signin
+  return <SignIn onNavigateToSignUp={() => setCurrentPage("signup")} />;
+};
+
+const App = () => (
+  <QueryClientProvider client={queryClient}>
+    <TooltipProvider>
+      <Toaster />
+      <Sonner />
+      <AppContent />
+    </TooltipProvider>
+  </QueryClientProvider>
+);
+
+export default App;
