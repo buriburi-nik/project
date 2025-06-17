@@ -784,7 +784,7 @@ export const ChatInterface = ({ user, onLogout }) => {
                         className={cn(
                           "text-xs",
                           message.sender === "user"
-                            ? "text-indigo-100"
+                            ? "text-red-100"
                             : "text-gray-500 dark:text-gray-400",
                         )}
                       >
