@@ -52,10 +52,23 @@ export const ChatInterface = ({ user, onLogout }) => {
   const {
     isListening,
     transcript,
+    interimTranscript,
+    isSupported: isVoiceSupported,
+    error: voiceError,
     startListening,
     stopListening,
-    setTranscript,
+    resetTranscript,
   } = useVoiceRecognition();
+
+  const {
+    isSpeaking,
+    isPaused,
+    isSupported: isSpeechSupported,
+    speak,
+    pause: pauseSpeaking,
+    resume: resumeSpeaking,
+    stop: stopSpeaking,
+  } = useSpeechSynthesis();
 
   // Load chat history from localStorage on mount
   useEffect(() => {
